@@ -60,7 +60,9 @@ namespace OpenshiftDotNetSqlServerMvc
 
         private void ConfigureDatabaseConnection(IServiceCollection services)
         {
-            var applicationDbConnString = Configuration.GetConnectionString("ApplicationDbConnection");
+            //var applicationDbConnString = Configuration.GetConnectionString("ApplicationDbConnection");
+
+            var applicationDbConnString = Configuration.GetValue<string>("ConnectionStrings:ApplicationDbConnection");
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseSqlServer(applicationDbConnString));
         }
     }

@@ -23,10 +23,10 @@ namespace OpenshiftDotNetSqlServerMvc.DataAccess.Entities.ApplicationDb
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Name=ApplicationDbConnection");
-            }
+            //if (!optionsBuilder.IsConfigured)
+            //{
+            //    optionsBuilder.UseSqlServer("Name=ApplicationDbConnection");
+            //}
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
