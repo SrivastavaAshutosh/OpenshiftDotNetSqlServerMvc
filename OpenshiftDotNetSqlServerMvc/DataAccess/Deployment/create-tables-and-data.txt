@@ -1,0 +1,280 @@
+﻿USE [GeographicalArea]
+GO
+IF  EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'MS_Description' , N'SCHEMA',N'dbo', N'TABLE',N'State', N'COLUMN',N'StateCode'))
+EXEC sys.sp_dropextendedproperty @name=N'MS_Description' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'State', @level2type=N'COLUMN',@level2name=N'StateCode'
+GO
+IF  EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'MS_Description' , N'SCHEMA',N'dbo', N'TABLE',N'Country', N'COLUMN',N'CountryCode'))
+EXEC sys.sp_dropextendedproperty @name=N'MS_Description' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Country', @level2type=N'COLUMN',@level2name=N'CountryCode'
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[State]') AND type in (N'U'))
+ALTER TABLE [dbo].[State] DROP CONSTRAINT IF EXISTS [FK_State_CountrySubdivisionType]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[State]') AND type in (N'U'))
+ALTER TABLE [dbo].[State] DROP CONSTRAINT IF EXISTS [FK_State_Country]
+GO
+/****** Object:  Table [dbo].[State]    Script Date: 7/27/2021 6:54:36 PM ******/
+DROP TABLE IF EXISTS [dbo].[State]
+GO
+/****** Object:  Table [dbo].[CountrySubdivisionType]    Script Date: 7/27/2021 6:54:36 PM ******/
+DROP TABLE IF EXISTS [dbo].[CountrySubdivisionType]
+GO
+/****** Object:  Table [dbo].[Country]    Script Date: 7/27/2021 6:54:36 PM ******/
+DROP TABLE IF EXISTS [dbo].[Country]
+GO
+/****** Object:  Table [dbo].[Country]    Script Date: 7/27/2021 6:54:36 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Country](
+	[CountryId] [int] IDENTITY(1,1) NOT NULL,
+	[CountryCode] [nvarchar](2) NOT NULL,
+	[CountryName] [nvarchar](255) NOT NULL,
+ CONSTRAINT [PK_Country] PRIMARY KEY CLUSTERED 
+(
+	[CountryId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER AUTHORIZATION ON [dbo].[Country] TO  SCHEMA OWNER 
+GO
+/****** Object:  Table [dbo].[CountrySubdivisionType]    Script Date: 7/27/2021 6:54:37 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[CountrySubdivisionType](
+	[CountrySubdivisionTypeId] [int] IDENTITY(1,1) NOT NULL,
+	[CountrySubdivisionTypeName] [nvarchar](100) NOT NULL,
+	[Description] [nvarchar](255) NULL,
+ CONSTRAINT [PK_CountrySubdivisionType] PRIMARY KEY CLUSTERED 
+(
+	[CountrySubdivisionTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER AUTHORIZATION ON [dbo].[CountrySubdivisionType] TO  SCHEMA OWNER 
+GO
+/****** Object:  Table [dbo].[State]    Script Date: 7/27/2021 6:54:37 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[State](
+	[StateId] [int] IDENTITY(1,1) NOT NULL,
+	[StateName] [nvarchar](255) NOT NULL,
+	[Abbreviation] [nvarchar](10) NULL,
+	[StateCode] [nvarchar](10) NOT NULL,
+	[CountryId] [int] NOT NULL,
+	[CountrySubdivisionTypeId] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_State] PRIMARY KEY CLUSTERED 
+(
+	[StateId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER AUTHORIZATION ON [dbo].[State] TO  SCHEMA OWNER 
+GO
+SET IDENTITY_INSERT [dbo].[Country] ON 
+GO
+INSERT [dbo].[Country] ([CountryId], [CountryCode], [CountryName]) VALUES (1, N'US', N'United States of America')
+GO
+INSERT [dbo].[Country] ([CountryId], [CountryCode], [CountryName]) VALUES (2, N'CA', N'Canada')
+GO
+SET IDENTITY_INSERT [dbo].[Country] OFF
+GO
+SET IDENTITY_INSERT [dbo].[CountrySubdivisionType] ON 
+GO
+INSERT [dbo].[CountrySubdivisionType] ([CountrySubdivisionTypeId], [CountrySubdivisionTypeName], [Description]) VALUES (1, N'Capitol', NULL)
+GO
+INSERT [dbo].[CountrySubdivisionType] ([CountrySubdivisionTypeId], [CountrySubdivisionTypeName], [Description]) VALUES (2, N'Commonwealth', NULL)
+GO
+INSERT [dbo].[CountrySubdivisionType] ([CountrySubdivisionTypeId], [CountrySubdivisionTypeName], [Description]) VALUES (3, N'Minor', NULL)
+GO
+INSERT [dbo].[CountrySubdivisionType] ([CountrySubdivisionTypeId], [CountrySubdivisionTypeName], [Description]) VALUES (4, N'Province', NULL)
+GO
+INSERT [dbo].[CountrySubdivisionType] ([CountrySubdivisionTypeId], [CountrySubdivisionTypeName], [Description]) VALUES (5, N'State', NULL)
+GO
+INSERT [dbo].[CountrySubdivisionType] ([CountrySubdivisionTypeId], [CountrySubdivisionTypeName], [Description]) VALUES (6, N'Territory', NULL)
+GO
+SET IDENTITY_INSERT [dbo].[CountrySubdivisionType] OFF
+GO
+SET IDENTITY_INSERT [dbo].[State] ON 
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (1, N'Alabama', N'AL', N'US-AL', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (2, N'Alaska', N'AK', N'US-AK', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (3, N'Arizona', N'AZ', N'US-AZ', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (4, N'Arkansas', N'AR', N'US-AR', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (5, N'California', N'CA', N'US-CA', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (6, N'Colorado', N'CO', N'US-CO', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (7, N'Connecticut', N'CT', N'US-CT', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (8, N'Delaware', N'DE', N'US-DE', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (9, N'Florida', N'FL', N'US-FL', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (10, N'Georgia', N'GA', N'US-GA', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (11, N'Hawaii', N'HI', N'US-HI', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (12, N'Idaho', N'ID', N'US-ID', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (13, N'Illinois', N'IL', N'US-IL', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (14, N'Indiana', N'IN', N'US-IN', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (15, N'Iowa', N'IA', N'US-IA', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (16, N'Kansas', N'KS', N'US-KS', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (17, N'Kentucky', N'KY', N'US-KY', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (18, N'Louisiana', N'LA', N'US-LA', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (19, N'Maine', N'ME', N'US-ME', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (20, N'Maryland', N'MD', N'US-MD', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (21, N'Massachusetts', N'MA', N'US-MA', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (22, N'Michigan', N'MI', N'US-MI', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (23, N'Minnesota', N'MN', N'US-MN', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (24, N'Mississippi', N'MS', N'US-MS', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (25, N'Missouri', N'MO', N'US-MO', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (26, N'Montana', N'MT', N'US-MT', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (27, N'Nebraska', N'NE', N'US-NE', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (28, N'Nevada', N'NV', N'US-NV', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (29, N'New Hampshire', N'NH', N'US-NH', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (30, N'New Jersey', N'NJ', N'US-NJ', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (31, N'New Mexico', N'NM', N'US-NM', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (32, N'New York', N'NY', N'US-NY', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (33, N'North Carolina', N'NC', N'US-NC', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (34, N'North Dakota', N'ND', N'US-ND', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (35, N'Ohio', N'OH', N'US-OH', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (36, N'Oklahoma', N'OK', N'US-OK', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (37, N'Oregon', N'OR', N'US-OR', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (38, N'Pennsylvania', N'PA', N'US-PA', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (39, N'Rhode Island', N'RI', N'US-RI', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (40, N'South Carolina', N'SC', N'US-SC', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (41, N'South Dakota', N'SD', N'US-SD', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (42, N'Tennessee', N'TN', N'US-TN', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (43, N'Texas', N'TX', N'US-TX', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (44, N'Utah', N'UT', N'US-UT', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (45, N'Vermont', N'VT', N'US-VT', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (46, N'Virginia', N'VA', N'US-VA', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (47, N'Washington', N'WA', N'US-WA', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (48, N'West Virginia', N'WV', N'US-WV', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (49, N'Wisconsin', N'WI', N'US-WI', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (50, N'Wyoming', N'WY', N'US-WY', 1, 5, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (51, N'Washington DC', N'DC', N'US-DC', 1, 1, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (52, N'Puerto Rico', N'PR', N'US-PR', 1, 2, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (53, N'U.S. Virgin Islands', N'VI', N'US-VI', 1, 6, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (54, N'American Samoa', N'AS', N'US-AS', 1, 6, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (55, N'Guam', N'GU', N'US-GU', 1, 6, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (56, N'Northern Mariana Islands', N'MP', N'US-MP', 1, 2, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (57, N'Baker Island', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (58, N'Howland Island', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (59, N'Jarvis Island', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (60, N'Johnston Atoll', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (61, N'Midway Islands', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (62, N'Wake Island', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (63, N'Palmyra Atoll', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (64, N'Kingman Reef', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (65, N'Navassa Island', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (66, N'Serranilla Bank', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (67, N'Bajo Nuevo Bank', N'', N'US-UM', 1, 3, 0)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (68, N'Alberta', N'AB', N'CA-AB', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (69, N'British Columbia', N'BC', N'CA-BC', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (70, N'Manitoba', N'MB', N'CA-MB', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (71, N'New Brunswick', N'NB', N'CA-NB', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (72, N'Newfoundland and Labrador', N'NL', N'CA-NL', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (73, N'Nova Scotia', N'NS', N'CA-NS', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (74, N'Ontario', N'ON', N'CA-ON', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (75, N'Prince Edward Island', N'PE', N'CA-PE', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (76, N'Quebec', N'QC', N'CA-QC', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (77, N'Saskatchewan', N'SK', N'CA-SK', 2, 4, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (78, N'Northwest Territories', N'NT', N'CA-NT', 2, 6, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (79, N'Nunavut', N'NU', N'CA-NU', 2, 6, 1)
+GO
+INSERT [dbo].[State] ([StateId], [StateName], [Abbreviation], [StateCode], [CountryId], [CountrySubdivisionTypeId], [IsActive]) VALUES (80, N'Yukon Territory', N'YT', N'CA-YT', 2, 6, 1)
+GO
+SET IDENTITY_INSERT [dbo].[State] OFF
+GO
+ALTER TABLE [dbo].[State]  WITH CHECK ADD  CONSTRAINT [FK_State_Country] FOREIGN KEY([CountryId])
+REFERENCES [dbo].[Country] ([CountryId])
+GO
+ALTER TABLE [dbo].[State] CHECK CONSTRAINT [FK_State_Country]
+GO
+ALTER TABLE [dbo].[State]  WITH CHECK ADD  CONSTRAINT [FK_State_CountrySubdivisionType] FOREIGN KEY([CountrySubdivisionTypeId])
+REFERENCES [dbo].[CountrySubdivisionType] ([CountrySubdivisionTypeId])
+GO
+ALTER TABLE [dbo].[State] CHECK CONSTRAINT [FK_State_CountrySubdivisionType]
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ISO_3166-1_alpha-2 Country Code' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Country', @level2type=N'COLUMN',@level2name=N'CountryCode'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ISO_3166-2 Code' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'State', @level2type=N'COLUMN',@level2name=N'StateCode'
+GO
