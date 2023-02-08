@@ -1,0 +1,2 @@
+﻿
+Scaffold-DbContext -Connection Name=ApplicationDbConnection -Provider Microsoft.EntityFrameworkCore.SqlServer -Context ApplicationDbContext -Tables dbo.Country, dbo.CountrySubdivisionType, dbo.State -NoPluralize -Force -OutputDir DataAccess\\Entities\\ApplicationDb
