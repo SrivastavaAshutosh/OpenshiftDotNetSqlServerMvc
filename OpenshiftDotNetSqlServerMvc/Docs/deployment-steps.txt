@@ -1,0 +1,65 @@
+﻿
+DATABASE
+
+oc new-project mssqlserver
+
+oc create secret generic mssqlserver --from-literal=SA_PASSWORD="xxx"
+
+oc apply -f https://raw.githubusercontent.com/SrivastavaAshutosh/OpenshiftDotNetSqlServerMvc/master/OpenshiftDotNetSqlServerMvc/DataAccess/Deployment/provision-storage.yaml
+	or manually create the pvc
+
+oc apply -f https://raw.githubusercontent.com/SrivastavaAshutosh/OpenshiftDotNetSqlServerMvc/master/OpenshiftDotNetSqlServerMvc/DataAccess/Deployment/provision-sqlserver.yaml
+
+oc get pods
+
+oc rsh mssqlserver-deployment-xxx
+
+cd /opt/mssql-tools/bin
+
+./sqlcmd -S localhost -U sa -P xxx
+
+1> select name from sys.databases
+2> go
+
+oc port-forward mssql-deployment-XXXXXXX 1433:1433
+
+connect using SSMS
+
+	127.0.0.1,4433
+	sa / pwd
+
+create database and tables
+
+	create-db.txt
+
+	create-tables-and-data.txt
+
+edit grouping -> create new group geography
+
+WEB APPLICATION
+
+now deploy the web app - manual deployment
+
+	add
+
+	from git
+
+		https://github.com/SrivastavaAshutosh/OpenshiftDotNetSqlServerMvc
+		
+		/OpenshiftDotNetSqlServerMvc
+
+	manually select build strategy
+
+	.net 6 option
+
+	use group geography
+
+
+deployment secret
+
+	ConnectionStrings__ApplicationDbConnection 
+	
+	Server=mssqlserver;Database=GeographicalArea;persist security info=True;User=sa;Password=xxx;
+
+
+
