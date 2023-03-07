@@ -34,7 +34,7 @@ create database and tables
 
 	create-tables-and-data.txt
 
-edit grouping -> create new group geography
+right-click in topology view -> edit application grouping -> create new group geography
 
 WEB APPLICATION
 
@@ -74,11 +74,11 @@ oc create is openshift-dotnetmvc:latest
 
 docker tag ocdotnetmvc srivastavaashutosh/ocdotnetmvc:v1.0
 
-docker push srivastavaashutosh/srivastavaashutosh/ocdotnetmvc:v1.0
+docker push srivastavaashutosh/ocdotnetmvc:v1.0
 
 # to reference images in docker, use:
 docker.io/redis
-docker.io/srivastavaashutosh/srivastavaashutosh/ocdotnetmvc:v1.0
+docker.io/srivastavaashutosh/ocdotnetmvc:v1.0
 
 
 
