@@ -63,3 +63,27 @@ deployment secret
 
 
 
+
+
+oc create is openshift-dotnetmvc:latest
+
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings__ApplicationDbConnection": "Server=192.168.1.64,1433;Database=GeographicalArea;persist security info=True;User=sa;Password=xxx;"
+      }
+
+docker tag ocdotnetmvc srivastavaashutosh/ocdotnetmvc:v1.0
+
+docker push srivastavaashutosh/srivastavaashutosh/ocdotnetmvc:v1.0
+
+# to reference images in docker, use:
+docker.io/redis
+docker.io/srivastavaashutosh/srivastavaashutosh/ocdotnetmvc:v1.0
+
+
+
+
+
+
+
+
