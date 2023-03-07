@@ -62,7 +62,7 @@ deployment secret
 	Server=mssqlserver;Database=GeographicalArea;persist security info=True;User=sa;Password=xxx;
 
 
-
+append /countries to the URL when accessing the site in the browser
 
 
 oc create is openshift-dotnetmvc:latest
